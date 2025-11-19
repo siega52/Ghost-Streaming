@@ -1,9 +1,10 @@
 import { build, defineConfig } from "vite";
+
 export default defineConfig ({
     build: {
     rollupOptions: {
         input: {
-            main: 'indext.html',
+            main: 'index.html',
             content: 'src/content.js',
             background: 'src/background.js',
             popup: 'src/popup/popup.html'

@@ -1,13 +1,50 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Ghost Extension</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Ghost Controls</title>
+    <link rel="stylesheet" href="extension/popup/popup.css">
+</head>
+<body>
+    <div class="ghost-popup">
+        <header class="popup-header">
+            <h1>Ghost Companion</h1>
+            <div class="ghost-status" id="ghostStatus">Активен</div>
+        </header>
+        
+        <main class="popup-main">
+            <div class="control-group">
+                <label>Состояние призрака:</label>
+                <div class="toggle-container">
+                    <label class="toggle-label">
+                        <input type="checkbox" id="ghostToggle" checked>
+                        <span class="toggle-switch"></span>
+                        <span class="toggle-text" id="toggleText">Включен</span>
+                    </label>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <label for="ghostLevel">Уровень активности:</label>
+                <select id="ghostLevel">
+                    <option value="low">Низкий (редко)</option>
+                    <option value="medium" selected>Средний (нормально)</option>
+                    <option value="high">Высокий (часто)</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label>Статус видео:</label>
+                <div id="videoStatus">Поиск видео...</div>
+            </div>
+        </main>
+        
+        <footer class="popup-footer">
+            <button id="testBtn" class="test-button">Тест эффекта</button>
+            <button id="exorciseBtn" class="exorcise-button">Изгнать на 10 мин</button>
+        </footer>
+    </div>
+    
+    <script src="popup.js"></script>
+</body>
 </html>

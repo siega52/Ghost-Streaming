@@ -1,0 +1,213 @@
+/* popup/popup.css */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    width: 320px;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: white;
+    overflow-x: hidden;
+}
+
+.ghost-popup {
+    padding: 0;
+}
+
+/* Header */
+.popup-header {
+    background: rgba(0, 0, 0, 0.3);
+    padding: 15px;
+    text-align: center;
+    border-bottom: 2px solid #00ff00;
+    position: relative;
+}
+
+.popup-header h1 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    color: #00ff00;
+    font-weight: 600;
+}
+
+.ghost-status {
+    font-size: 11px;
+    color: #00ff00;
+    background: rgba(0, 255, 0, 0.15);
+    padding: 4px 12px;
+    border-radius: 12px;
+    display: inline-block;
+    border: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+/* Main Content */
+.popup-main {
+    padding: 20px 15px;
+}
+
+.control-group {
+    margin-bottom: 20px;
+}
+
+.control-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    color: #cccccc;
+    font-weight: 500;
+}
+
+/* FIXED Toggle Switch */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    user-select: none;
+    gap: 12px;
+}
+
+.toggle-text {
+    font-size: 14px;
+    color: #e2e8f0;
+    min-width: 100px;
+}
+
+/* Improved Toggle Switch */
+.toggle-switch {
+    position: relative;
+    width: 44px;
+    height: 24px;
+    background: #4a5568;
+    border-radius: 24px;
+    transition: all 0.3s ease;
+    border: 2px solid #2d3748;
+}
+
+/* .toggle-switch::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+} */
+
+#ghostToggle:checked + .toggle-switch {
+    background: #00ff00;
+    border-color: #00cc00;
+}
+
+#ghostToggle:checked + .toggle-switch::after {
+    transform: translateX(20px);
+    background: white;
+}
+
+/* Hide default checkbox */
+#ghostToggle {
+    display: none;
+}
+
+/* Select Styles */
+select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #444;
+    background: #2d3748;
+    color: white;
+    font-size: 13px;
+    margin-top: 5px;
+    transition: all 0.3s ease;
+}
+
+select:focus {
+    outline: none;
+    border-color: #00ff00;
+    box-shadow: 0 0 0 2px rgba(0, 255, 0, 0.1);
+}
+
+/* Video Status */
+#videoStatus {
+    font-size: 12px;
+    color: #00ff00;
+    padding: 8px 12px;
+    background: rgba(0, 255, 0, 0.1);
+    border-radius: 6px;
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    margin-top: 5px;
+}
+
+/* Footer */
+.popup-footer {
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-top: 1px solid #2d3748;
+}
+
+.test-button, .exorcise-button {
+    padding: 12px 16px;
+    border: none;
+    border-radius: 8px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.test-button {
+    background: linear-gradient(135deg, #4a5568 0%, #2d3748 100%);
+    color: white;
+    border: 1px solid #4a5568;
+}
+
+.test-button:hover {
+    background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.exorcise-button {
+    background: linear-gradient(135deg, #e53e3e 0%, #c53030 100%);
+    color: white;
+    border: 1px solid #e53e3e;
+}
+
+.exorcise-button:hover {
+    background: linear-gradient(135deg, #c53030 0%, #9b2c2c 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(229, 62, 62, 0.3);
+}
+
+/* Active states */
+.test-button:active, .exorcise-button:active {
+    transform: translateY(0);
+}
+
+/* Status colors */
+.status-active {
+    color: #00ff00;
+    background: rgba(0, 255, 0, 0.15);
+}
+
+.status-inactive {
+    color: #e53e3e;
+    background: rgba(229, 62, 62, 0.15);
+}

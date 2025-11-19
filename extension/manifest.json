@@ -1,0 +1,58 @@
+{
+  "manifest_version": 3,
+  "name": "Ghost Video Companion",
+  "version": "1.0.0",
+  "description": "Добавляет призрачные эффекты к видео на любых сайтах",
+  "author": "siega52",
+  
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage"
+  ],
+  
+  "content_scripts": [
+    {
+      "matches": [
+        "https://*/*",
+        "http://*/*"
+      ],
+      "js": ["scripts/content.js"],
+      "css": ["styles/ghost-effects.css"],
+      "run_at": "document_end"
+    }
+  ],
+  
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/*", "sounds/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "Ghost Video Settings",
+    "default_icon": {
+      "16": "icons/ghost-16.png",
+      "32": "icons/ghost-32.png",
+      "48": "icons/ghost-48.png",
+      "128": "icons/ghost-128.png"
+    }
+  },
+  
+  "icons": {
+    "16": "icons/ghost-16.png",
+    "32": "icons/ghost-32.png", 
+    "48": "icons/ghost-48.png",
+    "128": "icons/ghost-128.png"
+  },
+  
+  "background": {
+    "service_worker": "scripts/background.js"
+  },
+  
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}
