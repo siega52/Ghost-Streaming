@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ghost Test Video</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #00ff00;
+            text-align: center;
+        }
+        video {
+            width: 100%;
+            max-width: 800px;
+            display: block;
+            margin: 20px auto;
+            border: 3px solid #00ff00;
+            border-radius: 10px;
+        }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        button {
+            padding: 12px 24px;
+            margin: 5px 10px;
+            background: #00ff00;
+            color: #000;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            background: #00cc00;
+            transform: translateY(-2px);
+        }
+        .status {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(0, 255, 0, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Тестирование Ghost Extension</h1>
+        
+        <div class="status" id="status">
+            Загрузите призрака для начала тестирования
+        </div>
+        
+        <div class="controls">
+            <button onclick="loadGhost()">Загрузить призрака</button>
+            <button onclick="testEffect()">Тест эффекта</button>
+            <button onclick="unloadGhost()">Выгрузить призрака</button>
+        </div>
+        
+        <video controls>
+            <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+            Ваш браузер не поддерживает видео тег.
+        </video>
+        
+        <div style="text-align: center; margin-top: 30px;">
+            <h3>Другие тестовые видео:</h3>
+            <button onclick="changeVideo('bunny')">Big Buck Bunny</button>
+            <button onclick="changeVideo('elephant')">Elephant Dream</button>
+            <button onclick="changeVideo('tears')">Tears of Steel</button>
+        </div>
+    </div>
+
+    <script src="/extension/scripts/content.js"></script>
+    
+    <script>
+        const videos = {
+            bunny: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+            elephant: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4',
+            tears: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4'
+        };
+        
+        function loadGhost() {
+            if (!window.videoGhost) {
+                window.videoGhost = new VideoGhost();
+                document.getElementById('status').innerHTML = 
+                    '<strong>Призрак загружен!</strong><br>Эффекты будут появляться автоматически каждые 30-60 секунд';
+                document.getElementById('status').style.background = 'rgba(0, 255, 0, 0.2)';
+            } else {
+                alert('Призрак уже загружен!');
+            }
+        }
+        
+        function testEffect() {
+            if (window.videoGhost) {
+                const video = document.querySelector('video');
+                window.videoGhost.triggerGhostEvent(video);
+                document.getElementById('status').innerHTML = 
+                    '<strong>Эффект запущен!</strong><br>Проверяй видео на эффекты призрака';
+            } else {
+                alert('Сначала загрузи призрака!');
+            }
+        }
+        
+        function unloadGhost() {
+            if (window.videoGhost) {
+                window.videoGhost.destroy();
+                window.videoGhost = null;
+                document.getElementById('status').innerHTML = 
+                    '<strong>Призрак выгружен</strong><br>Эффекты больше не появляются';
+                document.getElementById('status').style.background = 'rgba(255, 0, 0, 0.2)';
+            }
+        }
+        
+        function changeVideo(type) {
+            const video = document.querySelector('video');
+            video.src = videos[type];
+            video.load();
+            document.getElementById('status').innerHTML = 
+                '<strong>Видео изменено</strong><br>Загрузи призрака для тестирования';
+            document.getElementById('status').style.background = 'rgba(255, 255, 0, 0.2)';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+@keyframes ghostGlitch {
+    0% {
+        opacity: 0;
+        transform: translateX(0) skew(0deg);
+    }
+    20% {
+        opacity: 0.8;
+        transform: translateX(-10px) skew(-5deg);
+    }
+    40% {
+        opacity: 0.6;
+        transform: translateX(10px) skew(5deg);
+    }
+    60% {
+        opacity: 0.7;
+        transform: translateX(-5px) skew(-3deg);
+    }
+    80% {
+        opacity: 0.5;
+        transform: translateX(5px) skew(3deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translateX(0) skew(0deg);
+    }
+}
+
+@keyframes ghostCommentFade {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.8);
+    }
+    15% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    85% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.8);
+    }
+}
+
+@keyframes ghostFootprint {
+    0% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2) rotate(5deg);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1.5) rotate(10deg);
+    }
+}
+
+.ghost-glitch {
+    animation: ghostGlitch 1.5s ease-out !important;
+}
+
+.ghost-comment {
+    animation: ghostCommentFade 6s ease-in-out forwards !important;
+}

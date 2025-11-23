@@ -1,20 +1,17 @@
-import { build, defineConfig } from "vite";
+import { defineConfig } from 'vite';
 
-export default defineConfig ({
-    build: {
+export default defineConfig({
+  build: {
+    outDir: 'dist',
     rollupOptions: {
-        input: {
-            main: 'index.html',
-            content: 'src/content.js',
-            background: 'src/background.js',
-            popup: 'src/popup/popup.html'
-        },
-        output: {
-            entryFileNames: '[name].js',
-            chunkFileNames: '[name].js',
-            assetFileNames: '[name].[ext]'
-        }
-    },
-    outDir: 'dist'
+      input: {
+        main: 'index.html',
+        test: 'test-video.html'
+      }
     }
+  },
+  server: {
+    port: 5173,
+    open: '/'
+  }
 });

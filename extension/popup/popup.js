@@ -8,6 +8,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const toggleText = document.getElementById('toggleText');
     const stats = document.getElementById('stats');
     
+    const defaultSettings = {
+        ghostEnabled: true,
+        ghostLevel: 'medium'
+    };
+    
+    loadSettings();
+    
     loadCurrentStatus();
     
     ghostToggle.addEventListener('change', toggleGhost);
@@ -15,27 +22,77 @@ document.addEventListener('DOMContentLoaded', function() {
     testBtn.addEventListener('click', testEffect);
     exorciseBtn.addEventListener('click', exorciseGhost);
     
-    function loadCurrentStatus() {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            if (tabs[0]) {
-                chrome.tabs.sendMessage(tabs[0].id, {action: 'getStatus'}, function(response) {
-                    if (response) {
-                        updateUI(response);
-                    } else {
-                        showErrorState();
-                    }
-                });
+    function loadSettings() {
+        try {
+            const saved = localStorage.getItem('ghostPopupSettings');
+            if (saved) {
+                const settings = JSON.parse(saved);
+                ghostToggle.checked = settings.ghostEnabled !== false;
+                ghostLevel.value = settings.ghostLevel || 'medium';
             } else {
-                showErrorState();
+                ghostToggle.checked = defaultSettings.ghostEnabled;
+                ghostLevel.value = defaultSettings.ghostLevel;
             }
-        });
+        } catch (e) {
+            ghostToggle.checked = defaultSettings.ghostEnabled;
+            ghostLevel.value = defaultSettings.ghostLevel;
+        }
+        
+        updateUIStatus(ghostToggle.checked, ghostLevel.value);
+    }
+    
+    function saveSettings() {
+        const settings = {
+            ghostEnabled: ghostToggle.checked,
+            ghostLevel: ghostLevel.value,
+            lastUpdated: new Date().toISOString()
+        };
+        
+        try {
+            localStorage.setItem('ghostPopupSettings', JSON.stringify(settings));
+        } catch (e) {
+            console.log('Cannot save settings to localStorage');
+        }
+    }
+    
+    function loadCurrentStatus() {
+        if (typeof chrome !== 'undefined' && chrome.tabs) {
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                if (tabs && tabs.length > 0 && tabs[0].id) {
+                    const tabId = tabs[0].id;
+                    
+                    chrome.tabs.sendMessage(tabId, {action: 'getStatus'}, function(response) {
+                        if (chrome.runtime.lastError) {
+                            showErrorState('Откройте страницу с видео и обновите её');
+                        } else if (response) {
+                            updateUI(response);
+                        } else {
+                            showErrorState('Расширение не активировано на этой странице');
+                        }
+                    });
+                } else {
+                    showErrorState('Не удалось получить активную вкладку');
+                }
+            });
+        } else {
+            showDemoState();
+        }
     }
     
     function updateUI(status) {
-        ghostToggle.checked = status.active;
-        ghostLevel.value = status.level;
-        
-        if (status.active) {
+        if (status && typeof status.active !== 'undefined') {
+            ghostToggle.checked = status.active;
+            ghostLevel.value = status.level;
+            
+            updateUIStatus(status.active, status.level);
+            
+            videoStatus.textContent = `Найдено видео: ${status.videosFound}`;
+            stats.textContent = `Эффектов вызвано: ${status.hauntCount || 0}`;
+        }
+    }
+    
+    function updateUIStatus(isActive, level) {
+        if (isActive) {
             ghostStatus.textContent = 'АКТИВЕН';
             ghostStatus.className = 'ghost-status status-active';
             toggleText.textContent = 'Включен';
@@ -45,59 +102,76 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleText.textContent = 'Выключен';
         }
         
-        videoStatus.textContent = `Найдено видео: ${status.videosFound}`;
-        stats.textContent = `Эффектов вызвано: ${status.hauntCount || 0}`;
+        ghostLevel.value = level;
     }
     
-    function showErrorState() {
-        videoStatus.textContent = 'Обновите страницу для активации';
+    function showErrorState(message) {
+        videoStatus.textContent = message;
         ghostStatus.textContent = 'НЕАКТИВЕН';
         ghostStatus.className = 'ghost-status status-inactive';
         toggleText.textContent = 'Выключен';
-        ghostToggle.checked = false;
         stats.textContent = 'Эффектов вызвано: 0';
     }
     
+    function showDemoState() {
+        videoStatus.textContent = 'Демо-режим (тестирование в браузере)';
+        ghostStatus.textContent = 'ДЕМО';
+        ghostStatus.className = 'ghost-status status-active';
+        stats.textContent = 'Эффектов вызвано: ?';
+    }
+    
     function toggleGhost() {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            if (tabs[0]) {
-                chrome.tabs.sendMessage(tabs[0].id, {
-                    action: 'toggleGhost',
-                    active: ghostToggle.checked
-                }, function(response) {
-                    if (response && response.success) {
-                        loadCurrentStatus();
-                    }
-                });
-            }
-        });
+        const isActive = ghostToggle.checked;
+        
+        saveSettings();
+        
+        if (typeof chrome !== 'undefined' && chrome.tabs) {
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                if (tabs && tabs.length > 0 && tabs[0].id) {
+                    chrome.tabs.sendMessage(tabs[0].id, {
+                        action: 'toggleGhost',
+                        active: isActive
+                    });
+                }
+            });
+        }
+        
+        updateUIStatus(isActive, ghostLevel.value);
     }
     
     function changeGhostLevel() {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            if (tabs[0]) {
-                chrome.tabs.sendMessage(tabs[0].id, {
-                    action: 'setGhostLevel', 
-                    level: ghostLevel.value
-                }, function(response) {
-                    if (response && response.success) {
-                        loadCurrentStatus();
-                    }
-                });
-            }
-        });
+        const level = ghostLevel.value;
+        
+        saveSettings();
+        
+        if (typeof chrome !== 'undefined' && chrome.tabs) {
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                if (tabs && tabs.length > 0 && tabs[0].id) {
+                    chrome.tabs.sendMessage(tabs[0].id, {
+                        action: 'setGhostLevel', 
+                        level: level
+                    });
+                }
+            });
+        }
+        
+        updateUIStatus(ghostToggle.checked, level);
     }
     
     function testEffect() {
-        chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
-            if (tabs[0]) {
-                chrome.tabs.sendMessage(tabs[0].id, {action: 'testEffect'}, function(response) {
-                    if (response && response.success) {
-                        setTimeout(loadCurrentStatus, 500);
-                    }
-                });
-            }
-        });
+        if (typeof chrome !== 'undefined' && chrome.tabs) {
+            chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
+                if (tabs && tabs.length > 0 && tabs[0].id) {
+                    chrome.tabs.sendMessage(tabs[0].id, {action: 'testEffect'}, function(response) {
+                        if (!chrome.runtime.lastError) {
+                            setTimeout(loadCurrentStatus, 1000);
+                        }
+                    });
+                }
+            });
+        } else {
+            alert('В демо-режиме тестирование эффектов недоступно. Установите расширение в браузер.');
+        }
     }
     
     function exorciseGhost() {
@@ -109,8 +183,8 @@ document.addEventListener('DOMContentLoaded', function() {
             toggleGhost();
         }, 10 * 60 * 1000);
         
-        alert('Призрак изгнан на 10 минут! 👻➡️🚪');
+        alert('Призрак изгнан на 10 минут!');
     }
     
-    setInterval(loadCurrentStatus, 2000);
+    setInterval(loadCurrentStatus, 3000);
 });

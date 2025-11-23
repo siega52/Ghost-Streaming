@@ -1,51 +1,157 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Ghost Controls</title>
-    <link rel="stylesheet" href="extension/popup/popup.css">
-</head>
-<body>
-    <div class="ghost-popup">
-        <header class="popup-header">
-            <h1>Ghost Companion</h1>
-            <div class="ghost-status" id="ghostStatus">Активен</div>
-        </header>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ghost Extension Dev</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 20px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        color: white;
+        min-height: 100vh;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+      h1 {
+        color: #00ff00;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(0, 255, 0, 0.3);
+      }
+      .links {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 20px;
+      }
+      .link-btn {
+        display: block;
+        padding: 15px;
+        background: rgba(0, 255, 0, 0.2);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        text-align: center;
+        border: 1px solid rgba(0, 255, 0, 0.5);
+        transition: all 0.3s ease;
+      }
+      .link-btn:hover {
+        background: rgba(0, 255, 0, 0.3);
+        transform: translateY(-2px);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Ghost Video Extension - Development</h1>
+      
+      <div class="card">
+        <h2>Тестовые страницы</h2>
+        <p>Используй эти страницы для тестирования компонентов расширения:</p>
         
-        <main class="popup-main">
-            <div class="control-group">
-                <label>Состояние призрака:</label>
-                <div class="toggle-container">
-                    <label class="toggle-label">
-                        <input type="checkbox" id="ghostToggle" checked>
-                        <span class="toggle-switch"></span>
-                        <span class="toggle-text" id="toggleText">Включен</span>
-                    </label>
-                </div>
-            </div>
-            
-            <div class="control-group">
-                <label for="ghostLevel">Уровень активности:</label>
-                <select id="ghostLevel">
-                    <option value="low">Низкий (редко)</option>
-                    <option value="medium" selected>Средний (нормально)</option>
-                    <option value="high">Высокий (часто)</option>
-                </select>
-            </div>
-            
-            <div class="control-group">
-                <label>Статус видео:</label>
-                <div id="videoStatus">Поиск видео...</div>
-            </div>
-        </main>
-        
-        <footer class="popup-footer">
-            <button id="testBtn" class="test-button">Тест эффекта</button>
-            <button id="exorciseBtn" class="exorcise-button">Изгнать на 10 мин</button>
-        </footer>
+        <div class="links">
+          <a href="/extension/popup/popup.html" target="_blank" class="link-btn">
+            Popup (управление)
+          </a>
+          <a href="/test-video.html" target="_blank" class="link-btn">
+            Тест с видео
+          </a>
+        </div>
+      </div>
+      
+      <div class="card">
+        <h2>Инструкция по установке</h2>
+        <ol>
+          <li>Открой <code>chrome://extensions/</code></li>
+          <li>Включи "Режим разработчика"</li>
+          <li>Нажми "Загрузить распакованное расширение"</li>
+          <li>Выбери папку <code>extension/</code></li>
+        </ol>
+      </div>
+      
+      <div class="card">
+        <h2>Тестовые функции</h2>
+        <button onclick="testGlitch()" style="padding: 10px 15px; margin: 5px;">Тест глитча</button>
+        <button onclick="testComment()" style="padding: 10px 15px; margin: 5px;">Тест комментария</button>
+      </div>
     </div>
-    
-    <script src="extension/popup/popup.js"></script>
-    <script src="src/main.js"></script>
-</body>
+
+    <script>
+      function testGlitch() {
+        const glitch = document.createElement('div');
+        glitch.style.cssText = `
+          position: fixed;
+          top: 0; left: 0;
+          width: 100vw; height: 100vh;
+          background: linear-gradient(45deg, rgba(255,0,0,0.1), rgba(0,255,0,0.1));
+          mix-blend-mode: overlay;
+          pointer-events: none;
+          z-index: 9999;
+          animation: glitchAnim 1s;
+        `;
+        
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes glitchAnim {
+            0% { opacity: 0; transform: translateX(0); }
+            50% { opacity: 0.8; transform: translateX(-10px); }
+            100% { opacity: 0; transform: translateX(0); }
+          }
+        `;
+        
+        document.head.appendChild(style);
+        document.body.appendChild(glitch);
+        setTimeout(() => {
+          glitch.remove();
+          style.remove();
+        }, 1000);
+      }
+      
+      function testComment() {
+        const comment = document.createElement('div');
+        comment.textContent = "Тестовый комментарий призрака!";
+        comment.style.cssText = `
+          position: fixed;
+          top: 20px; right: 20px;
+          background: rgba(0,0,0,0.9);
+          color: #00ff00;
+          padding: 15px;
+          border-radius: 10px;
+          border: 2px solid #ff00ff;
+          z-index: 10000;
+          font-family: monospace;
+          animation: commentFade 5s;
+        `;
+        
+        const style = document.createElement('style');
+        style.textContent = `
+          @keyframes commentFade {
+            0% { opacity: 0; transform: translateY(-20px); }
+            20% { opacity: 1; transform: translateY(0); }
+            80% { opacity: 1; transform: translateY(0); }
+            100% { opacity: 0; transform: translateY(-20px); }
+          }
+        `;
+        
+        document.head.appendChild(style);
+        document.body.appendChild(comment);
+        setTimeout(() => {
+          comment.remove();
+          style.remove();
+        }, 5000);
+      }
+    </script>
+  </body>
 </html>
